@@ -114,7 +114,7 @@ export default function Board(props: any) {
 		if (cellsContent[i][2] === cellsContent[i][4] && cellsContent[i][2] === cellsContent[i][6] && cellsContent[i][2] !== '') {
 			setMacroCellsContent([...macroCellsContent.map((c, index) => {
 				if (index === i) {
-					return cellsContent[i][3]
+					return cellsContent[i][2]
 				}
 				return c
 			})])
