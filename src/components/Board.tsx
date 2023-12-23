@@ -9,6 +9,7 @@ export default function Board(props: any) {
 	const [cellsStatus, setCellsStatus] = useState<boolean[]>([...Array(9)].map(() => true));
 	const [macroCellsContent, setMacroCellsContent] = useState<string[]>([...Array(9)].map(() => ''));
 	const [cellToCheck, setCellToCheck] = useState<number>(0);
+	const vertical = props.vertical ? 'vertical' : '';
 
 	useEffect(() => {
 		checkMicroTris(cellToCheck)
@@ -46,7 +47,7 @@ export default function Board(props: any) {
 	}
 
 	function checkMicroTris(i: number) {
-		console.log('checkMicroTris', i)
+		console.log('cellsContent', cellsContent)
 		if (cellsContent[i][0] === cellsContent[i][1] && cellsContent[i][0] === cellsContent[i][2] && cellsContent[i][0] !== '') {
 			setMacroCellsContent([...macroCellsContent.map((c, index) => {
 				if (index === i) {
@@ -110,7 +111,7 @@ export default function Board(props: any) {
 			})])
 			setCellsStatus([...cellsStatus.map(()=>{return true})])
 		}
-		if (cellsContent[i][3] === cellsContent[i][4] && cellsContent[i][3] === cellsContent[i][6] && cellsContent[i][3] !== '') {
+		if (cellsContent[i][2] === cellsContent[i][4] && cellsContent[i][2] === cellsContent[i][6] && cellsContent[i][2] !== '') {
 			setMacroCellsContent([...macroCellsContent.map((c, index) => {
 				if (index === i) {
 					return cellsContent[i][3]
@@ -122,17 +123,18 @@ export default function Board(props: any) {
 	}
 
 	return (
-		<div className={"board"}>
+		<div className={`board ${vertical}`}>
 			{[...Array(9)].map((_, i) => {
 				return (
 					<div className={`
 							tile 
+						 ${vertical}
 							${cellsStatus[i] ? '' : 'disabled'}
 							${macroCellsContent[i] === '' ? '' : 'filled'}`
 						} key={i}>
 						{
 							macroCellsContent[i] === '' ?
-								<div className={`subTileContainer`}>
+								<div className={`subTileContainer ${vertical}`}>
 									{[...Array(9)].map((_, j) => {
 										return (
 											<div
@@ -140,6 +142,7 @@ export default function Board(props: any) {
 												id={`${i}${j}`}
 												className={
 													`subTile 
+												 ${vertical}
 													${cellsContent[i][j] !== '' ? 'filled' : ''}
 													${turn === 'X' ? 'red' : 'blue'}
 													${cellsStatus[i] ? '' : 'disabled'}`
@@ -156,7 +159,7 @@ export default function Board(props: any) {
 									})}
 								</div>
 								:
-								<div className={`tileWinner`}>
+								<div className={`tileWinner ${vertical}`}>
 									{
 										macroCellsContent[i] === 'X' ?
 											<Cross fill={"#a21b1b"} width={"100%"} height={"100%"}/>
