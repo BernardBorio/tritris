@@ -124,53 +124,66 @@ export default function Board(props: any) {
 	}
 
 	return (
-		<div className={`board ${vertical}`}>
-			{[...Array(9)].map((_, i) => {
-				return (
-					<div className={`
-							tile 
-						 ${vertical}
-							${cellsStatus[i] ? '' : 'disabled'}
-							${macroCellsContent[i] === '' ? '' : 'filled'}`
+		<div className={"boardContainer"}>
+			<div className={`info`}>
+				<div className={"name red"}>
+					<Cross fill={props.colors.red} width={"24px"} height={"24px"}/>
+					<h2>{props.match.red}</h2>
+				</div>
+				<h2>Partita numero: {props.match.id}</h2>
+				<div className={"name blue"}>
+					<h2>{props.match.blue}</h2>
+					<Circle stroke={props.colors.blue} width={"24px"} height={"24px"}/>
+				</div>
+			</div>
+			<div className={`board ${vertical}`}>
+				{[...Array(9)].map((_, i) => {
+					return (
+						<div className={`
+								tile 
+							 ${vertical}
+								${cellsStatus[i] ? '' : 'disabled'}
+								${macroCellsContent[i] === '' ? '' : 'filled'}`
 						} key={i}>
-						{
-							macroCellsContent[i] === '' ?
-								<div className={`subTileContainer ${vertical}`}>
-									{[...Array(9)].map((_, j) => {
-										return (
-											<div
-												onClick={() => selectCell(i, j)}
-												id={`${i}${j}`}
-												className={
-													`subTile 
-												 ${vertical}
-													${cellsContent[i][j] !== '' ? 'filled' : ''}
-													${turn === 'X' ? 'red' : 'blue'}
-													${cellsStatus[i] ? '' : 'disabled'}`
-												} key={j}>
-												{
-													cellsContent[i][j] === '' ? '' :
-														cellsContent[i][j] === 'X' ?
-															<Cross fill={props.colors.red} width={"50%"} height={"50%"}/>
-															:
-															<Circle stroke={props.colors.blue} width={"calc(50% + 2px)"} height={"calc(50% + 2px)"}/>
-												}
-											</div>
-										)
-									})}
-								</div>
-								:
-								<div className={`tileWinner ${vertical}`}>
-									{
-										macroCellsContent[i] === 'X' ?
-											<Cross fill={props.colors.red} width={"100%"} height={"100%"}/>
-											:
-											<Circle stroke={props.colors.blue} width={"calc(100% + 2px)"} height={"calc(100% + 2px)"}/>
-									}
-								</div>
-						}
-					</div>)
-			})}
+							{
+								macroCellsContent[i] === '' ?
+									<div className={`subTileContainer ${vertical}`}>
+										{[...Array(9)].map((_, j) => {
+											return (
+												<div
+													onClick={() => selectCell(i, j)}
+													id={`${i}${j}`}
+													className={
+														`subTile 
+													 ${vertical}
+														${cellsContent[i][j] !== '' ? 'filled' : ''}
+														${turn === 'X' ? 'red' : 'blue'}
+														${cellsStatus[i] ? '' : 'disabled'}`
+													} key={j}>
+													{
+														cellsContent[i][j] === '' ? '' :
+															cellsContent[i][j] === 'X' ?
+																<Cross fill={props.colors.red} width={"50%"} height={"50%"}/>
+																:
+																<Circle stroke={props.colors.blue} width={"calc(50% + 2px)"} height={"calc(50% + 2px)"}/>
+													}
+												</div>
+											)
+										})}
+									</div>
+									:
+									<div className={`tileWinner ${vertical}`}>
+										{
+											macroCellsContent[i] === 'X' ?
+												<Cross fill={props.colors.red} width={"100%"} height={"100%"}/>
+												:
+												<Circle stroke={props.colors.blue} width={"calc(100% + 2px)"} height={"calc(100% + 2px)"}/>
+										}
+									</div>
+							}
+						</div>)
+				})}
+			</div>
 		</div>
 	)
 }

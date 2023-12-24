@@ -75,6 +75,7 @@ function App(props: any) {
 					<Board
 						colors={colors}
 						vertical={screenSize.width < screenSize.height}
+						match={match}
 						db={db}
 					/>
 			}
