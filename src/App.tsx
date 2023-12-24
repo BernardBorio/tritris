@@ -1,13 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import logo from './logo.svg';
 import './App.scss';
-import Board from "./components/Board";
-import {getDatabase, ref, set, onValue} from "firebase/database";
+import Board from "./components/Board/Board";
+import {getDatabase, onValue, ref, set} from "firebase/database";
+import StartScreen from "./components/StartScreen/StartScreen";
 
 function App(props: any) {
+	const firebase = props.app
+	const db = getDatabase(firebase);
 
 	const [screenSize, setScreenSize] = useState(getCurrentDimension());
-	const firebase = props.app
+	const [match, setMatch] = useState<number>(-1);
+	const [matches, setMatches] = useState<any[]>([]);
+	const [newId, setNewId] = useState<number>(0);
 	function getCurrentDimension() {
 		return {
 			width: window.innerWidth,
@@ -15,12 +19,32 @@ function App(props: any) {
 		}
 	}
 
-	const db = getDatabase(firebase);
+	const colors = {
+		red: "#a21b1b",
+		blue: "#001CBE"
+	}
 
 	const data = ref(db, 'matches');
-	onValue(data, (snapshot) => {
-		console.log(snapshot.val());
-	})
+
+	useEffect(() => {
+		onValue(data, (snapshot) => {
+			let data = snapshot.val();
+			if (data!== null) {
+				let maxId = 0;
+				data.forEach((match: any, index: number) => {
+					if (match.id > maxId) {
+						maxId = match.id;
+					}
+				})
+				setNewId(maxId + 1);
+			}
+			else {
+				data = [];
+			}
+			setMatches(data);
+			console.log(snapshot.val());
+		})
+	},[])
 
 	useEffect(() => {
 		const updateDimension = () => {
@@ -34,7 +58,22 @@ function App(props: any) {
 
 	return (
 		<div className={"container"}>
-			<Board vertical={screenSize.width < screenSize.height}/>
+			{
+				match === -1 ?
+					<StartScreen
+						matches={matches}
+						colors={colors}
+						newId={newId}
+						setMatches={setMatches}
+						setMatch={setMatch}
+						db={db}
+					/>:
+					<Board
+						colors={colors}
+						vertical={screenSize.width < screenSize.height}
+						db={db}
+					/>
+			}
 		</div>
 
 	);

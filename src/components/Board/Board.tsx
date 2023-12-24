@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {ReactComponent as Circle} from '../assets/circle.svg';
-import {ReactComponent as Cross} from '../assets/cross.svg';
+import {ReactComponent as Circle} from '../../assets/circle.svg';
+import {ReactComponent as Cross} from '../../assets/cross.svg';
+import './Board.scss';
 
 export default function Board(props: any) {
 
@@ -150,9 +151,9 @@ export default function Board(props: any) {
 												{
 													cellsContent[i][j] === '' ? '' :
 														cellsContent[i][j] === 'X' ?
-															<Cross fill={"#a21b1b"} width={"50%"} height={"50%"}/>
+															<Cross fill={props.colors.red} width={"50%"} height={"50%"}/>
 															:
-															<Circle stroke={"#001CBE"} width={"calc(50% + 2px)"} height={"calc(50% + 2px)"}/>
+															<Circle stroke={props.colors.blue} width={"calc(50% + 2px)"} height={"calc(50% + 2px)"}/>
 												}
 											</div>
 										)
@@ -162,9 +163,9 @@ export default function Board(props: any) {
 								<div className={`tileWinner ${vertical}`}>
 									{
 										macroCellsContent[i] === 'X' ?
-											<Cross fill={"#a21b1b"} width={"100%"} height={"100%"}/>
+											<Cross fill={props.colors.red} width={"100%"} height={"100%"}/>
 											:
-											<Circle stroke={"#001CBE"} width={"calc(100% + 2px)"} height={"calc(100% + 2px)"}/>
+											<Circle stroke={props.colors.blue} width={"calc(100% + 2px)"} height={"calc(100% + 2px)"}/>
 									}
 								</div>
 						}

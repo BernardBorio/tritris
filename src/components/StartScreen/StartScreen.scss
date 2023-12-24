@@ -1,0 +1,101 @@
+@import "/src/App";
+
+.startScreen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .title {
+    font-size: 6rem;
+    color: $red;
+    margin-bottom: 2rem;
+    span {
+        color: $blue;
+    }
+  }
+
+  .button {
+    background: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    text-align: center;
+
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    &.red {
+      border: 3px solid $red;
+      &:hover {
+        background: $redHover;
+      }
+      &.filled {
+        background: $red;
+        color: white;
+        font-weight: 400;
+      }
+    }
+    &.blue {
+      border: 3px solid $blue;
+      &:hover {
+        background: $blueHover;
+      }
+      &.filled {
+        background: $blue;
+        color: white;
+        font-weight: 400;
+      }
+    }
+  }
+  .textInput {
+    background: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    text-align: center;
+    font-size: 1.1rem;
+    &:focus {
+      outline: none;
+    }
+    &.red {
+      border: 3px solid $red;
+      color: $red;
+    }
+    &.blue {
+      border: 3px solid $blue;
+        color: $blue;
+    }
+  }
+
+  .startMatch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+
+    .inputContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      //flex-direction: column;
+      margin-bottom: 1rem;
+    }
+
+    .buttonsContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+  }
+
+}
