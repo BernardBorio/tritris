@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {ReactComponent as Circle} from '../../assets/circle.svg';
 import {ReactComponent as Cross} from '../../assets/cross.svg';
 import './Board.scss';
+import {ref, set} from "firebase/database";
 
 export default function Board(props: any) {
 
@@ -15,6 +16,22 @@ export default function Board(props: any) {
 	useEffect(() => {
 		checkMicroTris(cellToCheck)
 	}, [cellsContent]);
+
+	useEffect(() => {
+		setCellsContent(props.match.cellsContent)
+		setTurn(props.match.turn)
+	}, [props.match]);
+
+	useEffect(() => {
+		let newMatch = {...props.match, cellsContent: cellsContent, turn: turn}
+		let newMatches = props.matches.map((match: any) => {
+			if (match.id === newMatch.id) {
+				return newMatch
+			}
+			return match
+		})
+		set(ref(props.db, 'matches/'), newMatches)
+	}, [cellsContent, turn]);
 
 	function selectCell(i: number, j: number) {
 		setCellToCheck(i)
@@ -39,8 +56,7 @@ export default function Board(props: any) {
 			setCellsStatus([...cellsStatus].map((cell, index) => {
 				return true;
 			}))
-		}
-		else {
+		} else {
 			setCellsStatus([...cellsStatus].map((cell, index) => {
 				return index === j;
 			}))
@@ -56,7 +72,9 @@ export default function Board(props: any) {
 				}
 				return c
 			})])
-			setCellsStatus([...cellsStatus.map(()=>{return true})])
+			setCellsStatus([...cellsStatus.map(() => {
+				return true
+			})])
 		}
 		if (cellsContent[i][3] === cellsContent[i][4] && cellsContent[i][3] === cellsContent[i][5] && cellsContent[i][3] !== '') {
 			setMacroCellsContent([...macroCellsContent.map((c, index) => {
@@ -65,7 +83,9 @@ export default function Board(props: any) {
 				}
 				return c
 			})])
-			setCellsStatus([...cellsStatus.map(()=>{return true})])
+			setCellsStatus([...cellsStatus.map(() => {
+				return true
+			})])
 		}
 		if (cellsContent[i][6] === cellsContent[i][7] && cellsContent[i][6] === cellsContent[i][8] && cellsContent[i][6] !== '') {
 			setMacroCellsContent([...macroCellsContent.map((c, index) => {
@@ -74,7 +94,9 @@ export default function Board(props: any) {
 				}
 				return c
 			})])
-			setCellsStatus([...cellsStatus.map(()=>{return true})])
+			setCellsStatus([...cellsStatus.map(() => {
+				return true
+			})])
 		}
 		if (cellsContent[i][0] === cellsContent[i][3] && cellsContent[i][0] === cellsContent[i][6] && cellsContent[i][0] !== '') {
 			setMacroCellsContent([...macroCellsContent.map((c, index) => {
@@ -83,7 +105,9 @@ export default function Board(props: any) {
 				}
 				return c
 			})])
-			setCellsStatus([...cellsStatus.map(()=>{return true})])
+			setCellsStatus([...cellsStatus.map(() => {
+				return true
+			})])
 		}
 		if (cellsContent[i][1] === cellsContent[i][4] && cellsContent[i][1] === cellsContent[i][7] && cellsContent[i][1] !== '') {
 			setMacroCellsContent([...macroCellsContent.map((c, index) => {
@@ -92,7 +116,9 @@ export default function Board(props: any) {
 				}
 				return c
 			})])
-			setCellsStatus([...cellsStatus.map(()=>{return true})])
+			setCellsStatus([...cellsStatus.map(() => {
+				return true
+			})])
 		}
 		if (cellsContent[i][2] === cellsContent[i][5] && cellsContent[i][2] === cellsContent[i][8] && cellsContent[i][2] !== '') {
 			setMacroCellsContent([...macroCellsContent.map((c, index) => {
@@ -101,7 +127,9 @@ export default function Board(props: any) {
 				}
 				return c
 			})])
-			setCellsStatus([...cellsStatus.map(()=>{return true})])
+			setCellsStatus([...cellsStatus.map(() => {
+				return true
+			})])
 		}
 		if (cellsContent[i][0] === cellsContent[i][4] && cellsContent[i][0] === cellsContent[i][8] && cellsContent[i][0] !== '') {
 			setMacroCellsContent([...macroCellsContent.map((c, index) => {
@@ -110,7 +138,9 @@ export default function Board(props: any) {
 				}
 				return c
 			})])
-			setCellsStatus([...cellsStatus.map(()=>{return true})])
+			setCellsStatus([...cellsStatus.map(() => {
+				return true
+			})])
 		}
 		if (cellsContent[i][2] === cellsContent[i][4] && cellsContent[i][2] === cellsContent[i][6] && cellsContent[i][2] !== '') {
 			setMacroCellsContent([...macroCellsContent.map((c, index) => {
@@ -119,7 +149,9 @@ export default function Board(props: any) {
 				}
 				return c
 			})])
-			setCellsStatus([...cellsStatus.map(()=>{return true})])
+			setCellsStatus([...cellsStatus.map(() => {
+				return true
+			})])
 		}
 	}
 
@@ -130,7 +162,7 @@ export default function Board(props: any) {
 					<Cross fill={props.colors.red} width={"24px"} height={"24px"}/>
 					<h2>{props.match.red}</h2>
 				</div>
-				<h2>Partita numero: {props.match.id}</h2>
+				<h2>QUESTO È IL PORCODDIO DI ID: {props.match.id}</h2>
 				<div className={"name blue"}>
 					<h2>{props.match.blue}</h2>
 					<Circle stroke={props.colors.blue} width={"24px"} height={"24px"}/>
@@ -165,7 +197,8 @@ export default function Board(props: any) {
 															cellsContent[i][j] === 'X' ?
 																<Cross fill={props.colors.red} width={"50%"} height={"50%"}/>
 																:
-																<Circle stroke={props.colors.blue} width={"calc(50% + 2px)"} height={"calc(50% + 2px)"}/>
+																<Circle stroke={props.colors.blue} width={"calc(50% + 2px)"}
+																				height={"calc(50% + 2px)"}/>
 													}
 												</div>
 											)

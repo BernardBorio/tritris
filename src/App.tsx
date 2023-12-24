@@ -9,7 +9,7 @@ function App(props: any) {
 	const db = getDatabase(firebase);
 
 	const [screenSize, setScreenSize] = useState(getCurrentDimension());
-	const [match, setMatch] = useState<object>();
+	const [match, setMatch] = useState<any>();
 	const [matches, setMatches] = useState<any[]>([]);
 	const [newId, setNewId] = useState<number>(0);
 	function getCurrentDimension() {
@@ -31,9 +31,13 @@ function App(props: any) {
 			let data = snapshot.val();
 			if (data!== null) {
 				let maxId = 0;
-				data.forEach((match: any, index: number) => {
-					if (match.id > maxId) {
-						maxId = match.id;
+				data.forEach((m: any, index: number) => {
+					if (m.id > maxId) {
+						maxId = m.id;
+					}
+					if(match && m.id === match.id) {
+						console.log('match', m)
+						setMatch(m)
 					}
 				})
 				setNewId(maxId + 1);
@@ -76,6 +80,7 @@ function App(props: any) {
 						colors={colors}
 						vertical={screenSize.width < screenSize.height}
 						match={match}
+						matches={matches}
 						db={db}
 					/>
 			}

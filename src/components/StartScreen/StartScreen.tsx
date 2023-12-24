@@ -8,7 +8,6 @@ import {ref, set} from "firebase/database";
 
 export default function StartScreen(props: any) {
 
-	let colors = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3", "#00ff00", "#000000"];
 	const [state, setState] = useState(-1);
 	const [redName, setRedName] = useState("");
 	const [blueName, setBlueName] = useState("");
@@ -32,7 +31,8 @@ export default function StartScreen(props: any) {
 			red: redName,
 			blue: blueName,
 			cellsContent: [...Array(9)].map(() => [...Array(9)].map(() => '')),
-			status: redName === '' || blueName === '' ? 'pending' : 'full'
+			status: redName === '' || blueName === '' ? 'pending' : 'full',
+			turn: 'X'
 		}
 		let newMatches = [...props.matches, newMatch]
 		// props.setMatches([...props.matches, newMatch])
@@ -60,7 +60,8 @@ export default function StartScreen(props: any) {
 			red: newRedName,
 			blue: newBlueName,
 			cellsContent: [...Array(9)].map(() => [...Array(9)].map(() => '')),
-			status: 'full'
+			status: 'full',
+			turn: 'X'
 		}
 		let newMatches = props.matches.map((match: any) => {
 			if (match.id === newMatch.id) {
