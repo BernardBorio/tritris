@@ -71,6 +71,9 @@
       border: 3px solid $blue;
         color: $blue;
     }
+    &[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
   }
 
   .startMatch {
@@ -80,22 +83,36 @@
     flex-direction: column;
     text-align: center;
 
-    .inputContainer {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      //flex-direction: column;
-      margin-bottom: 1rem;
-    }
+  }
 
-    .buttonsContainer {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: row;
-      margin-bottom: 1rem;
-      gap: 1rem;
-    }
+  .inputContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    //flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .buttonsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+
+  .joinMatch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+
+  }
+
+  .mb-1 {
+    margin-bottom: 1rem;
   }
 
 }
