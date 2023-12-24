@@ -21,17 +21,24 @@
       justify-content: center;
       align-items: center;
       gap: 0.5rem;
+
       &.red {
         color: $red;
       }
+
       &.blue {
-          color: $blue;
+        color: $blue;
       }
     }
   }
 
   .board {
     height: 80%;
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
 
     &.vertical {
       width: 90%;

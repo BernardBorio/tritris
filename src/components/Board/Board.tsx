@@ -124,7 +124,7 @@ export default function Board(props: any) {
 	}
 
 	return (
-		<div className={"boardContainer"}>
+		<div className={`boardContainer`}>
 			<div className={`info`}>
 				<div className={"name red"}>
 					<Cross fill={props.colors.red} width={"24px"} height={"24px"}/>
@@ -136,7 +136,7 @@ export default function Board(props: any) {
 					<Circle stroke={props.colors.blue} width={"24px"} height={"24px"}/>
 				</div>
 			</div>
-			<div className={`board ${vertical}`}>
+			<div className={`board ${vertical} ${props.match.red === '' || props.match.blue === '' ? 'disabled' : ''}`}>
 				{[...Array(9)].map((_, i) => {
 					return (
 						<div className={`
