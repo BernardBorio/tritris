@@ -9,7 +9,7 @@ function App(props: any) {
 	const db = getDatabase(firebase);
 
 	const [screenSize, setScreenSize] = useState(getCurrentDimension());
-	const [match, setMatch] = useState<any>();
+	const [matchId, setMatchId] = useState<number>(-1);
 	const [matches, setMatches] = useState<any[]>([]);
 	const [newId, setNewId] = useState<number>(0);
 	function getCurrentDimension() {
@@ -29,29 +29,27 @@ function App(props: any) {
 	useEffect(() => {
 		onValue(data, (snapshot) => {
 			let data = snapshot.val();
+			console.log(data)
 			if (data!== null) {
 				let maxId = 0;
 				data.forEach((m: any, index: number) => {
 					if (m.id > maxId) {
 						maxId = m.id;
 					}
-					if(match && m.id === match.id) {
-						console.log('match', m)
-						setMatch(m)
-					}
 				})
 				setNewId(maxId + 1);
 			}
 			else {
 				data = [];
+				setNewId(0);
 			}
 			setMatches(data);
 		})
 	},[])
 
 	useEffect(() => {
-		console.log('matches', matches)
-	}, [matches]);
+		console.log('match', matchId)
+	}, [matchId]);
 
 	useEffect(() => {
 		const updateDimension = () => {
@@ -63,23 +61,24 @@ function App(props: any) {
 		})
 	}, [screenSize])
 
+
 	return (
 		<div className={"container"}>
 			{
-				!match ?
+				matchId === -1 ?
 					<StartScreen
 						matches={matches}
 						colors={colors}
 						newId={newId}
 						setMatches={setMatches}
-						setMatch={setMatch}
-						match={match}
+						setMatchId={setMatchId}
+						matchId={matchId}
 						db={db}
 					/>:
 					<Board
 						colors={colors}
 						vertical={screenSize.width < screenSize.height}
-						match={match}
+						matchId={matchId}
 						matches={matches}
 						db={db}
 					/>

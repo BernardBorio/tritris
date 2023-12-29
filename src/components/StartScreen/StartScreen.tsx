@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import './StartScreen.scss';
-import {ReactComponent as Circle} from '../../assets/circle.svg';
-import {ReactComponent as Cross} from '../../assets/cross.svg';
-import {red} from "@mui/material/colors";
+import Circle from '../../assets/circle.tsx';
+import Cross from '../../assets/cross.tsx';
 import {Form} from "react-bootstrap";
 import {ref, set} from "firebase/database";
 
@@ -35,10 +34,9 @@ export default function StartScreen(props: any) {
 			turn: 'X'
 		}
 		let newMatches = [...props.matches, newMatch]
-		// props.setMatches([...props.matches, newMatch])
 
 		set(ref(props.db, 'matches/'), newMatches)
-		props.setMatch(newMatch)
+		props.setMatchId(newMatch.id)
 		console.log(redName, blueName)
 	}
 
@@ -70,7 +68,7 @@ export default function StartScreen(props: any) {
 			return match
 		})
 		set(ref(props.db, 'matches/'), newMatches)
-		props.setMatch(newMatch)
+		props.setMatchId(newMatch.id)
 	}
 
 	return (

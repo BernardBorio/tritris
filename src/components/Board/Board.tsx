@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {ReactComponent as Circle} from '../../assets/circle.svg';
-import {ReactComponent as Cross} from '../../assets/cross.svg';
+import Circle from '../../assets/circle.tsx';
+import Cross from '../../assets/cross.tsx';
 import './Board.scss';
 import {ref, set} from "firebase/database";
 
@@ -12,18 +12,33 @@ export default function Board(props: any) {
 	const [macroCellsContent, setMacroCellsContent] = useState<string[]>([...Array(9)].map(() => ''));
 	const [cellToCheck, setCellToCheck] = useState<number>(0);
 	const vertical = props.vertical ? 'vertical' : '';
+	const [match, setMatch] = useState<any>({
+		id: -1,
+		red: '',
+		blue: '',
+		cellsContent: [...Array(9)].map(() => [...Array(9)].map(() => '')),
+		status: 'pending',
+		turn: 'X'
+	});
 
 	useEffect(() => {
 		checkMicroTris(cellToCheck)
 	}, [cellsContent]);
 
 	useEffect(() => {
-		setCellsContent(props.match.cellsContent)
-		setTurn(props.match.turn)
-	}, [props.match]);
+		console.log('matchId', props.matchId)
+		setMatch(props.matches.filter((match: any) => match.id === props.matchId)[0])
+		setCellsContent(match.cellsContent)
+		setTurn(match.turn)
+	}, []);
+
 
 	useEffect(() => {
-		let newMatch = {...props.match, cellsContent: cellsContent, turn: turn}
+		let newMatch = {
+			...props.matches.filter((match: any) => match.id === props.matchId)[0],
+			cellsContent: cellsContent,
+			turn: turn
+		}
 		let newMatches = props.matches.map((match: any) => {
 			if (match.id === newMatch.id) {
 				return newMatch
@@ -32,6 +47,12 @@ export default function Board(props: any) {
 		})
 		set(ref(props.db, 'matches/'), newMatches)
 	}, [cellsContent, turn]);
+
+	useEffect(() => {
+		console.log('matchId', props.matchId)
+		console.log('matches', props.matches)
+		setMatch(props.matches.filter((match: any) => match.id === props.matchId)[0])
+	}, [props.matches])
 
 	function selectCell(i: number, j: number) {
 		setCellToCheck(i)
@@ -156,67 +177,70 @@ export default function Board(props: any) {
 	}
 
 	return (
-		<div className={`boardContainer`}>
-			<div className={`info`}>
-				<div className={"name red"}>
-					<Cross fill={props.colors.red} width={"24px"} height={"24px"}/>
-					<h2>{props.match.red}</h2>
+		match !== undefined ?
+			<div className={`boardContainer`}>
+				{JSON.stringify(match)}
+				<div className={`info`}>
+					<div className={"name red"}>
+						<Cross fill={props.colors.red} width={"24px"} height={"24px"}/>
+						<h2>{match.red}</h2>
+					</div>
+					<h2>ID Partita: {match.id}</h2>
+					<div className={"name blue"}>
+						<h2>{match.blue}</h2>
+						<Circle stroke={props.colors.blue} width={"24px"} height={"24px"}/>
+					</div>
 				</div>
-				<h2>QUESTO È IL PORCODDIO DI ID: {props.match.id}</h2>
-				<div className={"name blue"}>
-					<h2>{props.match.blue}</h2>
-					<Circle stroke={props.colors.blue} width={"24px"} height={"24px"}/>
-				</div>
-			</div>
-			<div className={`board ${vertical} ${props.match.red === '' || props.match.blue === '' ? 'disabled' : ''}`}>
-				{[...Array(9)].map((_, i) => {
-					return (
-						<div className={`
+				<div className={`board ${vertical} ${match.red === '' || match.blue === '' ? 'disabled' : ''}`}>
+					{[...Array(9)].map((_, i) => {
+						return (
+							<div className={`
 								tile 
 							 ${vertical}
 								${cellsStatus[i] ? '' : 'disabled'}
 								${macroCellsContent[i] === '' ? '' : 'filled'}`
-						} key={i}>
-							{
-								macroCellsContent[i] === '' ?
-									<div className={`subTileContainer ${vertical}`}>
-										{[...Array(9)].map((_, j) => {
-											return (
-												<div
-													onClick={() => selectCell(i, j)}
-													id={`${i}${j}`}
-													className={
-														`subTile 
+							} key={i}>
+								{
+									macroCellsContent[i] === '' ?
+										<div className={`subTileContainer ${vertical}`}>
+											{[...Array(9)].map((_, j) => {
+												return (
+													<div
+														onClick={() => selectCell(i, j)}
+														id={`${i}${j}`}
+														className={
+															`subTile 
 													 ${vertical}
 														${cellsContent[i][j] !== '' ? 'filled' : ''}
 														${turn === 'X' ? 'red' : 'blue'}
 														${cellsStatus[i] ? '' : 'disabled'}`
-													} key={j}>
-													{
-														cellsContent[i][j] === '' ? '' :
-															cellsContent[i][j] === 'X' ?
-																<Cross fill={props.colors.red} width={"50%"} height={"50%"}/>
-																:
-																<Circle stroke={props.colors.blue} width={"calc(50% + 2px)"}
-																				height={"calc(50% + 2px)"}/>
-													}
-												</div>
-											)
-										})}
-									</div>
-									:
-									<div className={`tileWinner ${vertical}`}>
-										{
-											macroCellsContent[i] === 'X' ?
-												<Cross fill={props.colors.red} width={"100%"} height={"100%"}/>
-												:
-												<Circle stroke={props.colors.blue} width={"calc(100% + 2px)"} height={"calc(100% + 2px)"}/>
-										}
-									</div>
-							}
-						</div>)
-				})}
+														} key={j}>
+														{
+															cellsContent[i][j] === '' ? '' :
+																cellsContent[i][j] === 'X' ?
+																	<Cross fill={props.colors.red} width={"50%"} height={"50%"}/>
+																	:
+																	<Circle stroke={props.colors.blue} width={"calc(50% + 2px)"}
+																					height={"calc(50% + 2px)"}/>
+														}
+													</div>
+												)
+											})}
+										</div>
+										:
+										<div className={`tileWinner ${vertical}`}>
+											{
+												macroCellsContent[i] === 'X' ?
+													<Cross fill={props.colors.red} width={"100%"} height={"100%"}/>
+													:
+													<Circle stroke={props.colors.blue} width={"calc(100% + 2px)"} height={"calc(100% + 2px)"}/>
+											}
+										</div>
+								}
+							</div>)
+					})}
+				</div>
 			</div>
-		</div>
+			: <></>
 	)
 }
