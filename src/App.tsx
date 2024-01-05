@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import './App.scss';
 import Board from "./components/Board/Board";
-import {getDatabase, onValue, ref, set} from "firebase/database";
+import {getDatabase, onValue, ref} from "firebase/database";
 import StartScreen from "./components/StartScreen/StartScreen";
 
 function App(props: any) {
@@ -12,6 +12,8 @@ function App(props: any) {
 	const [matchId, setMatchId] = useState<number>(-1);
 	const [matches, setMatches] = useState<any[]>([]);
 	const [newId, setNewId] = useState<number>(0);
+	const [player, setPlayer] = useState<string>('');
+
 	function getCurrentDimension() {
 		return {
 			width: window.innerWidth,
@@ -32,7 +34,7 @@ function App(props: any) {
 			console.log(data)
 			if (data!== null) {
 				let maxId = 0;
-				data.forEach((m: any, index: number) => {
+				data.forEach((m: any) => {
 					if (m.id > maxId) {
 						maxId = m.id;
 					}
@@ -43,7 +45,7 @@ function App(props: any) {
 				data = [];
 				setNewId(0);
 			}
-			setMatches(data);
+			setMatches([...data]);
 		})
 	},[])
 
@@ -74,6 +76,8 @@ function App(props: any) {
 						setMatchId={setMatchId}
 						matchId={matchId}
 						db={db}
+						player={player}
+						setPlayer={setPlayer}
 					/>:
 					<Board
 						colors={colors}
@@ -81,6 +85,7 @@ function App(props: any) {
 						matchId={matchId}
 						matches={matches}
 						db={db}
+						player={player}
 					/>
 			}
 		</div>

@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
 import './StartScreen.scss';
 import Circle from '../../assets/circle.tsx';
 import Cross from '../../assets/cross.tsx';
 import {Form} from "react-bootstrap";
 import {ref, set} from "firebase/database";
+import {useState} from "react";
+
 
 export default function StartScreen(props: any) {
 
@@ -30,10 +31,20 @@ export default function StartScreen(props: any) {
 			red: redName,
 			blue: blueName,
 			cellsContent: [...Array(9)].map(() => [...Array(9)].map(() => '')),
+			cellsStatus: [...Array(9)].map(() => true),
 			status: redName === '' || blueName === '' ? 'pending' : 'full',
 			turn: 'X'
 		}
 		let newMatches = [...props.matches, newMatch]
+		if(redName === '') {
+			props.setPlayer('O')
+		}
+		else if (blueName === ''){
+			props.setPlayer('X')
+		}
+		else {
+			props.setPlayer('S')
+		}
 
 		set(ref(props.db, 'matches/'), newMatches)
 		props.setMatchId(newMatch.id)
@@ -46,6 +57,15 @@ export default function StartScreen(props: any) {
 			return
 		}
 		let matchToJoin = props.matches.filter((match: any) => match.id === matchId)[0]
+		if(matchToJoin.red === '') {
+			props.setPlayer('X')
+		}
+		else if (matchToJoin.blue === ''){
+			props.setPlayer('O')
+		}
+		else {
+			props.setPlayer('S')
+		}
 		setMatch(matchToJoin)
 		setNewRedName(matchToJoin.red)
 		setNewBlueName(matchToJoin.blue)
@@ -58,6 +78,7 @@ export default function StartScreen(props: any) {
 			red: newRedName,
 			blue: newBlueName,
 			cellsContent: [...Array(9)].map(() => [...Array(9)].map(() => '')),
+			cellsStatus: [...Array(9)].map(() => true),
 			status: 'full',
 			turn: 'X'
 		}

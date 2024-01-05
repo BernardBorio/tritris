@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import Circle from '../../assets/circle.tsx';
 import Cross from '../../assets/cross.tsx';
 import './Board.scss';
@@ -17,9 +17,11 @@ export default function Board(props: any) {
 		red: '',
 		blue: '',
 		cellsContent: [...Array(9)].map(() => [...Array(9)].map(() => '')),
+		cellsStatus: [...Array(9)].map(() => true),
 		status: 'pending',
 		turn: 'X'
 	});
+	const [update, setUpdate] = useState<boolean>(false);
 
 	useEffect(() => {
 		checkMicroTris(cellToCheck)
@@ -37,6 +39,7 @@ export default function Board(props: any) {
 		let newMatch = {
 			...props.matches.filter((match: any) => match.id === props.matchId)[0],
 			cellsContent: cellsContent,
+			cellsStatus: cellsStatus,
 			turn: turn
 		}
 		let newMatches = props.matches.map((match: any) => {
@@ -46,13 +49,28 @@ export default function Board(props: any) {
 			return match
 		})
 		set(ref(props.db, 'matches/'), newMatches)
-	}, [cellsContent, turn]);
+	}, [update]);
 
 	useEffect(() => {
 		console.log('matchId', props.matchId)
 		console.log('matches', props.matches)
-		setMatch(props.matches.filter((match: any) => match.id === props.matchId)[0])
+		// console.log('match', props.matches.filter((match: any) => match.id === props.matchId)[0])
+		setMatch({...props.matches.filter((match: any) => match.id === props.matchId)[0]})
 	}, [props.matches])
+
+	useEffect(() => {
+		setCellsContent(match.cellsContent)
+		setTurn(match.turn)
+		console.log('match', match)
+		console.log('cellsStatus', match.cellsStatus)
+		setCellsStatus(match.cellsStatus)
+	}, [match]);
+
+	useEffect(() => {
+		for(let i=0; i<9; i++) {
+			checkMicroTris(i)
+		}
+	}, [cellsContent]);
 
 	function selectCell(i: number, j: number) {
 		setCellToCheck(i)
@@ -74,14 +92,15 @@ export default function Board(props: any) {
 		console.log('selectCell', i, j)
 		console.log('cellsContent', cellsContent)
 		if (macroCellsContent[j] !== '') {
-			setCellsStatus([...cellsStatus].map((cell, index) => {
+			setCellsStatus([...cellsStatus].map(() => {
 				return true;
 			}))
 		} else {
-			setCellsStatus([...cellsStatus].map((cell, index) => {
+			setCellsStatus([...cellsStatus].map((_cell, index) => {
 				return index === j;
 			}))
 		}
+		setUpdate(!update)
 	}
 
 	function checkMicroTris(i: number) {
@@ -179,7 +198,6 @@ export default function Board(props: any) {
 	return (
 		match !== undefined ?
 			<div className={`boardContainer`}>
-				{JSON.stringify(match)}
 				<div className={`info`}>
 					<div className={"name red"}>
 						<Cross fill={props.colors.red} width={"24px"} height={"24px"}/>
@@ -197,9 +215,12 @@ export default function Board(props: any) {
 							<div className={`
 								tile 
 							 ${vertical}
-								${cellsStatus[i] ? '' : 'disabled'}
+								${cellsStatus[i] && (match.turn === props.player || props.player === 'S') ? '' : 'disabled'}
 								${macroCellsContent[i] === '' ? '' : 'filled'}`
 							} key={i}>
+								{/*{match.turn}*/}
+								{/*{JSON.stringify(props.player)}*/}
+								{/*{(match.turn === props.player || props.player === 'S').toString()}*/}
 								{
 									macroCellsContent[i] === '' ?
 										<div className={`subTileContainer ${vertical}`}>
@@ -213,7 +234,7 @@ export default function Board(props: any) {
 													 ${vertical}
 														${cellsContent[i][j] !== '' ? 'filled' : ''}
 														${turn === 'X' ? 'red' : 'blue'}
-														${cellsStatus[i] ? '' : 'disabled'}`
+														${cellsStatus[i] && (match.turn === props.player || props.player === 'S') ? '' : 'disabled'}`
 														} key={j}>
 														{
 															cellsContent[i][j] === '' ? '' :
