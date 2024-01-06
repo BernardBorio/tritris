@@ -32,6 +32,7 @@ export default function StartScreen(props: any) {
 			blue: blueName,
 			cellsContent: [...Array(9)].map(() => [...Array(9)].map(() => '')),
 			cellsStatus: [...Array(9)].map(() => true),
+			cellToCheck: 0,
 			status: redName === '' || blueName === '' ? 'pending' : 'full',
 			turn: 'X'
 		}
@@ -79,6 +80,7 @@ export default function StartScreen(props: any) {
 			blue: newBlueName,
 			cellsContent: [...Array(9)].map(() => [...Array(9)].map(() => '')),
 			cellsStatus: [...Array(9)].map(() => true),
+			cellToCheck: 0,
 			status: 'full',
 			turn: 'X'
 		}

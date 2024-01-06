@@ -18,6 +18,7 @@ export default function Board(props: any) {
 		blue: '',
 		cellsContent: [...Array(9)].map(() => [...Array(9)].map(() => '')),
 		cellsStatus: [...Array(9)].map(() => true),
+		cellToCheck: cellToCheck,
 		status: 'pending',
 		turn: 'X'
 	});
@@ -40,7 +41,8 @@ export default function Board(props: any) {
 			...props.matches.filter((match: any) => match.id === props.matchId)[0],
 			cellsContent: cellsContent,
 			cellsStatus: cellsStatus,
-			turn: turn
+			turn: turn,
+			cellToCheck: cellToCheck
 		}
 		let newMatches = props.matches.map((match: any) => {
 			if (match.id === newMatch.id) {
@@ -61,16 +63,15 @@ export default function Board(props: any) {
 	useEffect(() => {
 		setCellsContent(match.cellsContent)
 		setTurn(match.turn)
-		console.log('match', match)
-		console.log('cellsStatus', match.cellsStatus)
 		setCellsStatus(match.cellsStatus)
+		setCellToCheck(match.cellToCheck)
 	}, [match]);
 
-	useEffect(() => {
-		for(let i=0; i<9; i++) {
-			checkMicroTris(i)
-		}
-	}, [cellsContent]);
+	// useEffect(() => {
+	// 	for(let i=0; i<9; i++) {
+	// 		checkMicroTris(i)
+	// 	}
+	// }, [cellsContent]);
 
 	function selectCell(i: number, j: number) {
 		setCellToCheck(i)
@@ -198,6 +199,7 @@ export default function Board(props: any) {
 	return (
 		match !== undefined ?
 			<div className={`boardContainer`}>
+				{macroCellsContent.toString()}
 				<div className={`info`}>
 					<div className={"name red"}>
 						<Cross fill={props.colors.red} width={"24px"} height={"24px"}/>
@@ -218,9 +220,6 @@ export default function Board(props: any) {
 								${cellsStatus[i] && (match.turn === props.player || props.player === 'S') ? '' : 'disabled'}
 								${macroCellsContent[i] === '' ? '' : 'filled'}`
 							} key={i}>
-								{/*{match.turn}*/}
-								{/*{JSON.stringify(props.player)}*/}
-								{/*{(match.turn === props.player || props.player === 'S').toString()}*/}
 								{
 									macroCellsContent[i] === '' ?
 										<div className={`subTileContainer ${vertical}`}>
