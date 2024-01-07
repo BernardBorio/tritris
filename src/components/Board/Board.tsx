@@ -199,7 +199,6 @@ export default function Board(props: any) {
 	return (
 		match !== undefined ?
 			<div className={`boardContainer`}>
-				{macroCellsContent.toString()}
 				<div className={`info`}>
 					<div className={"name red"}>
 						<Cross fill={props.colors.red} width={"24px"} height={"24px"}/>
